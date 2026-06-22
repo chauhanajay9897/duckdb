@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stockmock Positions UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="topline">
+      <div>
+        <div class="title">Positions Builder</div>
+        <div class="sub">Local UI version based on your provided layout.</div>
+      </div>
+      <button class="theme-btn" id="themeBtn">Toggle theme</button>
+    </div>
+
+    <div class="wrap">
+      <h2 class="sr-only">Options Strategy Builder - Positions</h2>
+      <div class="header">POSITIONS</div>
+
+      <div class="radio-group" style="justify-content:center;margin-bottom:14px">
+        <label><input type="radio" name="mode" checked> ATM Point</label>
+        <label><input type="radio" name="mode"> ATM Percent</label>
+        <label><input type="radio" name="mode"> Straddle Width <span class="badge">New</span></label>
+        <label><input type="radio" name="mode"> Closest Premium (CP) <span class="info-icon">i</span></label>
+        <label><input type="radio" name="mode"> CP based on Straddle Premium (SP) <span class="info-icon">i</span></label>
+      </div>
+
+      <div class="fields-row">
+        <div class="field-group">
+          <label>Select Index:</label>
+          <select id="index">
+            <option>Nifty</option>
+            <option>BankNifty</option>
+            <option>FinNifty</option>
+            <option>Sensex</option>
+            <option>MidcpNifty</option>
+            <option>Bankex</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Select Segment:</label>
+          <div class="toggle-group" data-group="seg" data-default="Options">
+            <button data-value="Futures">Futures</button>
+            <button class="active-seg" data-value="Options">Options</button>
+          </div>
+        </div>
+        <div class="field-group" id="opttype-group">
+          <label>Option Type:</label>
+          <div class="toggle-group" data-group="opt">
+            <button class="active-opt" data-value="Call">Call</button>
+            <button data-value="Put">Put</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Action Type:</label>
+          <div class="toggle-group" data-group="action">
+            <button class="active-buy" data-value="Buy">Buy</button>
+            <button data-value="Sell">Sell</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Strike Price:</label>
+          <select id="strike">
+            <option>ATM</option>
+            <option>ATM+1</option>
+            <option>ATM+2</option>
+            <option>ATM-1</option>
+            <option>ATM-2</option>
+            <option>ITM1</option>
+            <option>OTM1</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Total Lot</label>
+          <input id="lots" type="number" value="1" min="1">
+        </div>
+        <div class="field-group">
+          <label>Expiry Type:</label>
+          <select id="expiry">
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Next Weekly</option>
+            <option>Next Monthly</option>
+            <option>Far Monthly</option>
+            <option>Current Month</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="add-btn"><button id="addBtn">Add Position</button></div>
+      <hr class="divider">
+
+      <div class="toolbar-line">
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <div class="toggle-sm"><label class="switch"><input type="checkbox"><span class="slider-sw"></span></label>Use Spot as ATM</div>
+          <div class="toggle-sm"><label class="switch"><input type="checkbox"><span class="slider-sw"></span></label>Use Futures as ATM</div>
+        </div>
+        <div class="sqoff">
+          <label><input type="radio" name="sqoff" checked> Square Off One Leg <span class="info-icon">i</span></label>
+          <label><input type="radio" name="sqoff"> Square Off All Legs <span class="info-icon">i</span></label>
+        </div>
+      </div>
+
+      <div class="index-sel"><label>Index:</label><select>
+        <option>Nifty</option>
+        <option>BankNifty</option>
+        <option>FinNifty</option>
+        <option>Sensex</option>
+      </select></div>
+
+      <div class="checkbox-row">
+        <label><input type="checkbox"> Wait&Trade <span class="info-icon">i</span></label>
+        <label><input type="checkbox"> Move SL to Cost <span class="info-icon">i</span></label>
+        <label><input type="checkbox"> Re-Entry / Re-Execute <span class="info-icon">i</span></label>
+        <label><input type="checkbox"> Associated Hedge</label>
+      </div>
+
+      <div class="positions-list" id="positions-list"></div>
+
+      <div class="right-text">
+        <label style="font-size:12px;color:var(--color-text-secondary);display:inline-flex;align-items:center;gap:6px"><span class="switch"><input type="checkbox"><span class="slider-sw"></span></span>No ReEntry/ReExecute/Journey After</label>
+      </div>
+
+      <hr class="divider">
+
+      <div class="toolbar-line">
+        <label style="font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:5px"><input type="checkbox"> Range Breakout <span class="info-icon">i</span></label>
+        <div class="day-opts"><label><input type="radio" name="day" checked> Same Day</label><label><input type="radio" name="day"> Next Day (BTST/STBT)</label></div>
+      </div>
+
+      <div class="time-section">
+        <div class="time-block"><label>Entry Time:</label><div class="time-inputs"><select><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option></select><span>:</span><select><option>15</option><option>22</option><option>30</option><option>45</option></select><span>:</span><select><option>00</option><option>15</option><option>30</option><option>45</option></select></div></div>
+        <div class="time-block"><label>Exit Time:</label><div class="time-inputs"><select><option>15</option><option>14</option><option>13</option><option>12</option></select><span>:</span><select><option>15</option><option>00</option><option>30</option><option>45</option></select><span>:</span><select><option>00</option><option>15</option><option>30</option><option>45</option></select></div></div>
+      </div>
+
+      <hr class="divider">
+      <div class="bottom-links"><button class="bottom-link">Strategy Target Profit</button><button class="bottom-link">Strategy Stop Loss</button></div>
+      <hr class="divider" style="margin:14px 0">
+      <div style="text-align:center"><button class="bottom-link">Protect The Profits <span class="info-icon">i</span></button></div>
+
+      <div class="fields-row" style="margin-top:14px;gap:12px;">
+        <div class="field-group">
+          <label>Strategy Name:</label>
+          <input id="strategy-name" type="text" placeholder="Enter strategy name" />
+        </div>
+        <div class="field-group">
+          <label>&nbsp;</label>
+          <button id="saveStrategyBtn">Save Strategy</button>
+        </div>
+        <div class="field-group" style="display:flex;flex-direction:column;gap:8px;">
+          <label>&nbsp;</label>
+          <div style="display:flex;gap:8px;">
+            <button id="exportStrategyBtn" style="flex:1">Export</button>
+            <button id="importStrategyBtn" style="flex:1">Import</button>
+          </div>
+        </div>
+      </div>
+      <input type="file" id="strategy-file" accept="application/json" style="display:none" />
+
+      <div class="status" id="status">Ready.</div>
+    </div>
+  </div>
+  <script src="calc.js"></script>
+</body>
+</html>
